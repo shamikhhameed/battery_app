@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                             widget: Text(
                               showBatteryLevels == null
                                   ? "0"
-                                  : showBatteryLevels.toString() + " %",
+                                  : showBatteryLevels.toString() + "%",
                               style: const TextStyle(
                                 fontSize: 25,
                                 color: Colors.white,
