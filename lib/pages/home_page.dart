@@ -85,6 +85,8 @@ class _HomePageState extends State<HomePage> {
                           color: COLOR_GREY),
                     ]),
                 child: SfRadialGauge(
+                  // enableLoadingAnimation: true,
+                  // animationDuration: 4500,
                   axes: [
                     RadialAxis(
                       minimum: 0,
@@ -100,6 +102,8 @@ class _HomePageState extends State<HomePage> {
                           thicknessUnit: GaugeSizeUnit.factor),
                       pointers: <GaugePointer>[
                         RangePointer(
+                          enableAnimation: true,
+                          animationDuration: 1800,
                           value: double.parse(showBatteryLevels.toString()),
                           width: 0.3,
                           color: Colors.white,
