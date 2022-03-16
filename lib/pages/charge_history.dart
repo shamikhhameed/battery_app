@@ -1,6 +1,7 @@
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:battery_app/sql_helper.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ChargeHistory extends StatefulWidget {
   static const String routeName = '/chargeHistory';
@@ -27,6 +28,10 @@ class _ChargeHistoryState extends State<ChargeHistory> {
       _isLoading = false;
     });
   }
+
+  Color COLOR_RED = Colors.red;
+  Color COLOR_GREEN = Colors.green;
+  Color COLOR_GREY = Colors.grey;
 
   @override
   void initState() {
@@ -114,10 +119,86 @@ class _ChargeHistoryState extends State<ChargeHistory> {
           : ListView.builder(
               itemCount: _chargeHistory.length,
               itemBuilder: (context, index) => Card(
-                    margin: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.all(7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                     child: ListTile(
-                      title: Text(_chargeHistory[index]['percentage']),
-                      subtitle: Text(_chargeHistory[index]['createdAt']),
+                      title: Text('Charger was connecetd at ' + _chargeHistory[index]['percentage'] + '%'),
+                      // title: Transform.translate(
+                      //   offset: const Offset(0, 0),
+                      //   child: Text('Charger was connecetd at ' + _chargeHistory[index]['percentage'] + '%'),
+                      // ),
+                      // subtitle: Text('On ' + _chargeHistory[index]['createdAt'].split(' ')[0] + '\nAt ' + _chargeHistory[index]['createdAt'].split(' ')[1]),
+                      subtitle: Transform.translate(
+                        offset: const Offset(0, 2),
+                        child: Text('On ' + _chargeHistory[index]['createdAt'].split(' ')[0] + '\nAt ' + _chargeHistory[index]['createdAt'].split(' ')[1]),
+                      ),
+                      isThreeLine: true,
+                      trailing: Container(
+                        // margin: const EdgeInsets.only(top: 50),
+                        // width: MediaQuery.of(context).size.width * 0.5,
+                        // height: MediaQuery.of(context).size.width * 0.3,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(200),
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //       blurRadius: 5,
+                          //       spreadRadius: 2,
+                          //       offset: const Offset(0, 0),
+                          //       // blurRadius: 7,
+                          //       // spreadRadius: -5,
+                          //       // offset: const Offset(4, 4),
+                          //       color: COLOR_GREY
+                          //       ),
+                          // ]
+                        ),
+                        child: SfRadialGauge(
+                          axes: [
+                            RadialAxis(
+                              minimum: 0,
+                              maximum: 100,
+                              startAngle: 270,
+                              endAngle: 270,
+                              showLabels: false,
+                              showTicks: false,
+                              axisLineStyle: AxisLineStyle(
+                                  thickness: 1,
+                                  color:
+                                      double.parse(_chargeHistory[index]['percentage']) <= 20 ? COLOR_RED : COLOR_GREEN,
+                                  thicknessUnit: GaugeSizeUnit.factor),
+                              pointers: <GaugePointer>[
+                                RangePointer(
+                                  value: double.parse(_chargeHistory[index]['percentage'].toString()),
+                                  width: 0.3,
+                                  color: Colors.white,
+                                  pointerOffset: 0.1,
+                                  cornerStyle: showBatteryLevels == 100
+                                      ? CornerStyle.bothFlat
+                                      : CornerStyle.endCurve,
+                                  sizeUnit: GaugeSizeUnit.factor,
+                                )
+                              ],
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                    positionFactor: 0.5,
+                                    angle: 90,
+                                    widget: Text(
+                                      showBatteryLevels == null
+                                          ? "0"
+                                          : _chargeHistory[index]['percentage'].toString(),
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   )),
       // Column(
