@@ -73,19 +73,17 @@ class _HomePageState extends State<HomePage> {
                 width: MediaQuery.of(context).size.width * 0.6,
                 height: MediaQuery.of(context).size.width * 0.6,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(200),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 0),
-                        // blurRadius: 7,
-                        // spreadRadius: -5,
-                        // offset: const Offset(4, 4),
-                        color: COLOR_GREY
-                        ),
-                  ]
-                ),
+                    borderRadius: BorderRadius.circular(200),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 0),
+                          // blurRadius: 7,
+                          // spreadRadius: -5,
+                          // offset: const Offset(4, 4),
+                          color: COLOR_GREY),
+                    ]),
                 child: SfRadialGauge(
                   axes: [
                     RadialAxis(
@@ -131,9 +129,25 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
+                padding: const EdgeInsets.fromLTRB(20, 25, 20, 20),
                 width: MediaQuery.of(context).size.width * 0.85,
-                height: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.width * 0.2,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    batteryState == BatteryState.charging
+                        ? "Battery Charging"
+                        : batteryState == BatteryState.discharging
+                            ? "Battery Discharging"
+                            : "Battery Fully Charged",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: MediaQuery.of(context).size.width * 0.27,
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Row(
@@ -163,45 +177,48 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 15),
-                width: MediaQuery.of(context).size.width * 0.85,
-                height: MediaQuery.of(context).size.width * 0.16,
-                color: Color.fromARGB(40, 0, 0, 0),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        batteryState == BatteryState.charging
-                            ? "Charging"
-                            : batteryState == BatteryState.discharging
-                                ? "Discharging"
-                                : "Fully Charged",
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.only(top: 15),
+              //   width: MediaQuery.of(context).size.width * 0.85,
+              //   height: MediaQuery.of(context).size.width * 0.16,
+              //   color: Color.fromARGB(40, 0, 0, 0),
+              //   child: Align(
+              //     alignment: Alignment.topCenter,
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         Text(
+              //           batteryState == BatteryState.charging
+              //               ? "Charging"
+              //               : batteryState == BatteryState.discharging
+              //                   ? "Discharging"
+              //                   : "Fully Charged",
+              //           style: Theme.of(context).textTheme.headline5,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 10),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(ChargeHistory.routeName);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.width * 0.16,
-                  color: Color.fromARGB(40, 0, 0, 0),
+                  height: MediaQuery.of(context).size.width * 0.19,
+                  // color: const Color.fromARGB(40, 0, 0, 0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(40, 0, 0, 0)),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Battery Charge History",
+                          "Charge History",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
@@ -215,17 +232,20 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(NotificationSetter.routeName);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.width * 0.16,
-                  color: Color.fromARGB(40, 0, 0, 0),
+                  height: MediaQuery.of(context).size.width * 0.19,
+                  // color: Color.fromARGB(40, 0, 0, 0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(40, 0, 0, 0)),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Notification Setter",
+                          "Set Notification",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
@@ -239,10 +259,13 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(UsageLastCharge.routeName);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.width * 0.16,
-                  color: Color.fromARGB(40, 0, 0, 0),
+                  height: MediaQuery.of(context).size.width * 0.19,
+                  // color: Color.fromARGB(40, 0, 0, 0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(40, 0, 0, 0)),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Column(
@@ -263,10 +286,13 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(UsageLastWeek.routeName);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.width * 0.16,
-                  color: Color.fromARGB(40, 0, 0, 0),
+                  height: MediaQuery.of(context).size.width * 0.19,
+                  // color: Color.fromARGB(40, 0, 0, 0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(40, 0, 0, 0)),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Column(
