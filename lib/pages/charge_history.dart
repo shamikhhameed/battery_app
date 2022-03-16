@@ -170,6 +170,8 @@ class _ChargeHistoryState extends State<ChargeHistory> {
                                   thicknessUnit: GaugeSizeUnit.factor),
                               pointers: <GaugePointer>[
                                 RangePointer(
+                                  enableAnimation: true,
+                                  animationDuration: 1800,
                                   value: double.parse(_chargeHistory[index]['percentage'].toString()),
                                   width: 0.3,
                                   color: Colors.white,
