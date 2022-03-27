@@ -39,17 +39,20 @@ dependencies:
   provider: ^6.0.2
   sqflite:
   intl: ^0.17.0
+  app_usage: ^2.0.0
+  charts_flutter: ^0.12.0
+  drift: ^1.5.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.0
+  path: ^1.8.1
+  flutter_slidable: ^1.2.0
+  percent_indicator: ^4.0.0
+  device_apps: ^2.1.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  drift_dev: ^1.5.2
+  build_runner: ^2.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
