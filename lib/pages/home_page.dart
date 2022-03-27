@@ -49,13 +49,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    setState(() {
-      broadcastBattery = false;
-    });
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   // if (!mounted) return;
+  //   setState(() {
+  //     broadcastBattery = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

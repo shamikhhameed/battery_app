@@ -11,6 +11,9 @@ class SQLHelper {
   //     )
   //     """);
   // }
+
+  //Shamikh's part starts
+
   static Future<void> createTables(sql.Database database) async {
     await database.execute("""CREATE TABLE items(
         id String PRIMARY KEY NOT NULL,
@@ -112,4 +115,6 @@ class SQLHelper {
       debugPrint("Something went wrong when deleting an item: $err");
     }
   }
+
+  //Shamikh's part ends
 }
