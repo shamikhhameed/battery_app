@@ -23,10 +23,12 @@ class _ChargeHistoryState extends State<ChargeHistory> {
   // This function is used to fetch all data from the database
   void _refreshChargeHistory() async {
     final data = await SQLHelper.getItems();
-    setState(() {
+    if (mounted) {
+      setState(() {
       _chargeHistory = data;
       _isLoading = false;
     });
+    }
   }
 
   Color COLOR_RED = Colors.red;
@@ -40,9 +42,11 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     _refreshChargeHistory();
     _broadcastBatteryLevels();
     battery.onBatteryStateChanged.listen((event) {
-      setState(() {
+      if(mounted) {
+        setState(() {
         batteryState = event;
       });
+      }
       print('Battery state change detected');
       // () async {
       if (batteryState == BatteryState.charging) {
@@ -59,12 +63,22 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     broadcastBattery = true;
     while (broadcastBattery!) {
       var batteryLvls = await battery.batteryLevel;
-      setState(() {
-        showBatteryLevels = batteryLvls;
-      });
-      await Future.delayed(Duration(seconds: 5));
+      if (mounted) {
+        setState(() {
+          showBatteryLevels = batteryLvls;
+        });
+      }
+      await Future.delayed(const Duration(seconds: 5));
     }
   }
+
+  // @override
+  // void dispose() {
+  //   setState(() {
+  //     broadcastBattery = false;
+  //   });
+  //   super.dispose();
+  // }
 
   // Insert a new charge data to the database
   Future<void> _addItem() async {
@@ -124,7 +138,9 @@ class _ChargeHistoryState extends State<ChargeHistory> {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: ListTile(
-                      title: Text('Charger was connecetd at ' + _chargeHistory[index]['percentage'] + '%'),
+                      title: Text('Charger was connecetd at ' +
+                          _chargeHistory[index]['percentage'] +
+                          '%'),
                       // title: Transform.translate(
                       //   offset: const Offset(0, 0),
                       //   child: Text('Charger was connecetd at ' + _chargeHistory[index]['percentage'] + '%'),
@@ -132,7 +148,10 @@ class _ChargeHistoryState extends State<ChargeHistory> {
                       // subtitle: Text('On ' + _chargeHistory[index]['createdAt'].split(' ')[0] + '\nAt ' + _chargeHistory[index]['createdAt'].split(' ')[1]),
                       subtitle: Transform.translate(
                         offset: const Offset(0, 2),
-                        child: Text('On ' + _chargeHistory[index]['createdAt'].split(' ')[0] + '\nAt ' + _chargeHistory[index]['createdAt'].split(' ')[1]),
+                        child: Text('On ' +
+                            _chargeHistory[index]['createdAt'].split(' ')[0] +
+                            '\nAt ' +
+                            _chargeHistory[index]['createdAt'].split(' ')[1]),
                       ),
                       isThreeLine: true,
                       trailing: Container(
@@ -165,14 +184,19 @@ class _ChargeHistoryState extends State<ChargeHistory> {
                               showTicks: false,
                               axisLineStyle: AxisLineStyle(
                                   thickness: 1,
-                                  color:
-                                      double.parse(_chargeHistory[index]['percentage']) <= 20 ? COLOR_RED : COLOR_GREEN,
+                                  color: double.parse(_chargeHistory[index]
+                                              ['percentage']) <=
+                                          20
+                                      ? COLOR_RED
+                                      : COLOR_GREEN,
                                   thicknessUnit: GaugeSizeUnit.factor),
                               pointers: <GaugePointer>[
                                 RangePointer(
                                   enableAnimation: true,
                                   animationDuration: 1800,
-                                  value: double.parse(_chargeHistory[index]['percentage'].toString()),
+                                  value: double.parse(_chargeHistory[index]
+                                          ['percentage']
+                                      .toString()),
                                   width: 0.3,
                                   color: Colors.white,
                                   pointerOffset: 0.1,
@@ -189,13 +213,13 @@ class _ChargeHistoryState extends State<ChargeHistory> {
                                     widget: Text(
                                       showBatteryLevels == null
                                           ? "0"
-                                          : _chargeHistory[index]['percentage'].toString(),
+                                          : _chargeHistory[index]['percentage']
+                                              .toString(),
                                       style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.white,
                                       ),
-                                    )
-                                  )
+                                    ))
                               ],
                             )
                           ],
