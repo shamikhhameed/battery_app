@@ -15,6 +15,7 @@ class LimitUpdate extends StatefulWidget {
   final String id,appName,hours,note;
   LimitUpdate({required this.id,required this.appName,required this.hours,required this.note}) : super();
 
+  // set parameters for edit
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -29,6 +30,7 @@ class LimitUpdateState extends State<LimitUpdate> {
 
   LimitUpdateState(String this.id, String this.appName, String this.hour,String this.notes);
 
+  // list device apps
   Future<List?> getUsageStats() async {
     try {
       double allTime = 0;
@@ -37,6 +39,7 @@ class LimitUpdateState extends State<LimitUpdate> {
       List<AppUsageInfo> infoList =
           await AppUsage.getAppUsage(startDate, endDate);
 
+      // insert list array
       for (var info in infoList) {
         Map map = {
           "display": info.appName,
@@ -70,6 +73,17 @@ class LimitUpdateState extends State<LimitUpdate> {
       appBar: AppBar(
         title: Text("Limit App"),
         centerTitle: true,
+      ),
+      
+       floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LimitList()),
+          );
+        },
+        child: Icon(Icons.list),
+        backgroundColor: Color.fromARGB(255, 5, 166, 50),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -299,6 +313,7 @@ class LimitUpdateState extends State<LimitUpdate> {
     );
   }
 
+  // update data
   void saveData() async {
     await DatabaseHelper()
         .updateApplications(Applications(

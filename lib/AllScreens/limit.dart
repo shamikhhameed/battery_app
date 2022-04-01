@@ -23,6 +23,7 @@ class LimitState extends State<Limit> {
   List list = [];
   TextEditingController note = TextEditingController();
 
+  // List device apps
   Future<List?> getUsageStats() async {
     try {
       double allTime = 0;
@@ -31,6 +32,7 @@ class LimitState extends State<Limit> {
       List<AppUsageInfo> infoList =
           await AppUsage.getAppUsage(startDate, endDate);
 
+      // Insert list array
       for (var info in infoList) {
         Map map = {
           "display": info.appName,
@@ -60,17 +62,6 @@ class LimitState extends State<Limit> {
         title: Text("Limit App"),
         centerTitle: true,
       ),
-      // backgroundColor: Colors.white,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => LimitList()),
-      //     );
-      //   },
-      //   child: Icon(Icons.list),
-      //   backgroundColor: Colors.green.shade600,
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -304,6 +295,7 @@ class LimitState extends State<Limit> {
     );
   }
 
+  // Insert data
   void saveData() async {
     await DatabaseHelper()
         .insertApplications(Applications(

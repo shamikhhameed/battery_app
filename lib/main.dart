@@ -1,7 +1,7 @@
 import 'package:battery_app/pages/charge_history.dart';
 import 'package:battery_app/pages/home_page.dart';
 import 'package:battery_app/pages/notification_setter.dart';
-import 'package:battery_app/pages/usage_last_charge.dart';
+import 'package:battery_app/pages/limit_apps.dart';
 import 'package:battery_app/pages/usage_last_week.dart';
 import 'package:battery_app/presistance/app_details.dart';
 import 'package:flutter/material.dart';
