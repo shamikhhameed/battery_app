@@ -23,10 +23,12 @@ class _ChargeHistoryState extends State<ChargeHistory> {
   // This function is used to fetch all data from the database
   void _refreshChargeHistory() async {
     final data = await SQLHelper.getItems();
+    if (mounted) {
     setState(() {
       _chargeHistory = data;
       _isLoading = false;
     });
+  }
   }
 
   Color COLOR_RED = Colors.red;
@@ -40,16 +42,16 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     _refreshChargeHistory();
     _broadcastBatteryLevels();
     battery.onBatteryStateChanged.listen((event) {
+      if (mounted) {
       setState(() {
         batteryState = event;
       });
-      print('Battery state change detected');
+    }
       // () async {
       if (batteryState == BatteryState.charging) {
         // _addItem();
         _addOrUpdateItem();
         _deleteItem();
-        print('DB Updated - charger connected');
       }
       // };
     });
@@ -59,9 +61,11 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     broadcastBattery = true;
     while (broadcastBattery!) {
       var batteryLvls = await battery.batteryLevel;
+      if (mounted) {
       setState(() {
         showBatteryLevels = batteryLvls;
       });
+    }
       await Future.delayed(Duration(seconds: 5));
     }
   }

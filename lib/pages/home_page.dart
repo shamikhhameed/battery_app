@@ -4,7 +4,7 @@ import 'package:battery_app/pages/charge_history.dart';
 import 'package:battery_app/pages/notification_setter.dart';
 import 'package:battery_app/pages/usage_last_charge.dart';
 import 'package:battery_app/pages/usage_last_week.dart';
-import 'package:battery_plus/battery_plus.dart';
+import 'package:battery_plus/battery_plus.dart' as Battery;
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -17,9 +17,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Battery battery = Battery();
+  Battery.Battery battery = Battery.Battery();
   int showBatteryLevels = 0;
-  BatteryState? batteryState;
+  Battery.BatteryState? batteryState;
   bool? broadcastBattery;
 
   Color COLOR_RED = Colors.red;
@@ -49,13 +49,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    setState(() {
-      broadcastBattery = false;
-    });
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   // if (!mounted) return;
+  //   setState(() {
+  //     broadcastBattery = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +140,9 @@ class _HomePageState extends State<HomePage> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    batteryState == BatteryState.charging
+                    batteryState == Battery.BatteryState.charging
                         ? "Battery Charging"
-                        : batteryState == BatteryState.discharging
+                        : batteryState == Battery.BatteryState.discharging
                             ? "Battery Discharging"
                             : "Battery Fully Charged",
                     style: Theme.of(context).textTheme.headline5,
@@ -162,13 +163,13 @@ class _HomePageState extends State<HomePage> {
                           Icons.power,
                           40,
                           showBatteryLevels <= 20 ? COLOR_RED : COLOR_GREEN,
-                          batteryState == BatteryState.charging ? true : false),
+                          batteryState == Battery.BatteryState.charging ? true : false),
                       batteryContainer(
                           70,
                           Icons.power_off,
                           40,
                           showBatteryLevels <= 20 ? COLOR_RED : COLOR_GREEN,
-                          batteryState == BatteryState.discharging
+                          batteryState == Battery.BatteryState.discharging
                               ? true
                               : false),
                       batteryContainer(
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                           Icons.battery_charging_full,
                           40,
                           showBatteryLevels <= 20 ? COLOR_RED : COLOR_GREEN,
-                          batteryState == BatteryState.full ? true : false),
+                          batteryState == Battery.BatteryState.full ? true : false),
                     ],
                   ),
                 ),
@@ -249,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Set Notification",
+                          "Battery Alert",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
@@ -260,7 +261,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed(UsageLastCharge.routeName);
+                  Navigator.of(context).pushNamed(BatteryPage.routeName);
                 },
                 child: Container(
                   padding: const EdgeInsets.only(top: 20),
@@ -276,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Last Charge Usage",
+                          "App Limiter",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],

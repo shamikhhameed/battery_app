@@ -51,10 +51,10 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Last 7 Days"),
-          backgroundColor: Colors.green,
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white,
             onPressed: () async {
               var result = await showModalBottomSheet(
                 context: context,
@@ -72,7 +72,7 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
             future: getUsageStats(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Center(
+                return const Center(
                   child: CupertinoActivityIndicator(),
                 );
               }
@@ -87,11 +87,11 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
                         child: ListTile(
                           leading: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            children: const [
                               Icon(Icons.add),
                             ],
                           ),
-                          title: Text('No apps added'),
+                          title: const Text('No apps added'),
                           onTap: () async {
                             var result = await showModalBottomSheet(
                               context: context,
@@ -202,7 +202,7 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
                                   );
                                 },
                                 separatorBuilder: (_, i) {
-                                  return SizedBox(
+                                  return const SizedBox(
                                     height: 10,
                                   );
                                 },
@@ -324,6 +324,10 @@ class _AddEditAppState extends State<AddEditApp> {
                     appPackageName: drift.Value(_appPacakgeName.text));
                 Navigator.pop(context, data);
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: Colors.black
+              )
             )
           ],
         ),

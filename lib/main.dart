@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           HomePage.routeName: (context) => const HomePage(),
           ChargeHistory.routeName: (context) => const ChargeHistory(),
           NotificationSetter.routeName: (context) => const NotificationSetter(),
-          UsageLastCharge.routeName: (context) => const UsageLastCharge(),
+          BatteryPage.routeName: (context) => BatteryPage(),
           UsageLastWeek.routeName: (context) => const UsageLastWeek()
         },
       ),

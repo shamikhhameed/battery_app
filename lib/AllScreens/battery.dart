@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:app_usage/app_usage.dart';
 
-import '../AllScreens/limit.dart';
-import '../AllScreens/limit_list.dart';
+import 'limit.dart';
+import 'limit_list.dart';
 
 class BatteryPage extends StatefulWidget {
-  static const String routeName = '/batteryPage';
-  // static const String idScreen = "Battery";
+  static const String idScreen = "Battery";
 
   @override
   State<StatefulWidget> createState() {
@@ -130,30 +129,26 @@ class BatteryStates extends State<BatteryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Battery Status"),
-        centerTitle: true,
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
                   child: Column(
                 children: [
-                  SizedBox(height: 30),
                   buildImage(),
                   Text(
                     '${twoDigits(duration.inHours)}:${minutes}:${second}',
-                    style: TextStyle(
-                      fontSize: 24.0, 
-                      fontFamily: "Brand Bold",
-                    ),
+                    style: TextStyle(fontSize: 24.0, fontFamily: "Brand Bold"),
                     textAlign: TextAlign.center,
                   ),
                   usageApps(),
                   Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: RaisedButton(
-                        color: Colors.white,
-                        textColor: Colors.black,
+                        color: Colors.blue,
+                        textColor: Colors.white,
                         child: Container(
                           height: 50.0,
                           child: const Center(
@@ -168,18 +163,15 @@ class BatteryStates extends State<BatteryPage> {
                           borderRadius: new BorderRadius.circular(24.0),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Limit()),
-                          );
+                          Navigator.pushNamedAndRemoveUntil(context, Limit.idScreen, (route) => true);
                         },
                       )
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+                      padding: const EdgeInsets.all(20.0),
                       child: RaisedButton(
-                        color: Colors.white,
-                        textColor: Colors.black,
+                        color: Colors.blue,
+                        textColor: Colors.white,
                         child: Container(
                           height: 50.0,
                           child: const Center(
@@ -194,10 +186,7 @@ class BatteryStates extends State<BatteryPage> {
                           borderRadius: new BorderRadius.circular(24.0),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => LimitList()),
-                          );
+                          Navigator.pushNamedAndRemoveUntil(context, LimitList.idScreen, (route) => true);
                         },
                       )
                   )
