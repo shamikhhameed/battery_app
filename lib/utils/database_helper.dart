@@ -5,7 +5,7 @@ import 'package:battery_app/models/applications.dart';
 
 class DatabaseHelper {
   //Create database
-  Future<Database> initializeDB() async {
+  Future<Database> createDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, 'apps.db'),
@@ -20,7 +20,7 @@ class DatabaseHelper {
 
   // insert data
   Future<int> insertApplications(Applications app) async {
-    final db = await initializeDB();
+    final db = await createDB();
     final insertedId = await db.insert(
         'applications',
         app.toMap(),
@@ -31,7 +31,7 @@ class DatabaseHelper {
 
   // get all data
   Future<List<Applications>> applicationsList() async {
-    final db = await initializeDB();
+    final db = await createDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('applications');
     return queryResult.map((e) => Applications.fromMapObject(e)).toList();
@@ -39,7 +39,7 @@ class DatabaseHelper {
 
   //delete data
   Future<void> deleteApplications(int id) async {
-    final db = await initializeDB();
+    final db = await createDB();
     await db.delete(
       'applications',
       where: 'id = ?',
@@ -49,7 +49,7 @@ class DatabaseHelper {
 
   // update data
   Future<int> updateApplications(Applications app) async {
-    final db = await initializeDB();
+    final db = await createDB();
     return await db.update(
       'applications',
       app.toMap(),

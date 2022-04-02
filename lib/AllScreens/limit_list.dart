@@ -1,9 +1,10 @@
 import 'package:battery_app/AllScreens/limit_update.dart';
+import 'package:battery_app/pages/home_page.dart';
+import 'package:battery_app/pages/limit_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:battery_app/AllScreens/limit.dart';
 import 'package:battery_app/utils/database_helper.dart';
 import 'package:battery_app/models/applications.dart';
-import 'package:animated_button/animated_button.dart';
 import 'package:cool_alert/cool_alert.dart';
 
 class LimitList extends StatefulWidget {
@@ -17,11 +18,11 @@ class _LimitListState extends State<LimitList> {
   late DatabaseHelper helper;
   List list = [];
 
-  @override
+   @override
   void initState() {
     super.initState();
     helper = DatabaseHelper();
-    helper.initializeDB().whenComplete(() async {
+    helper.createDB().whenComplete(() async {
       this.getList().then((value) => {
             setState(() {
               list = value!;
@@ -48,7 +49,8 @@ class _LimitListState extends State<LimitList> {
 
   // refreshing the list
   Future<void> _onRefresh() async {
-    this.getList().then((value) => {
+    list = [];
+    await this.getList().then((value) => {
           setState(() {
             list = value!;
           })
@@ -88,16 +90,16 @@ class _LimitListState extends State<LimitList> {
         title: Text('Limit Apps List'),
         centerTitle: true,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => Limit()),
-      //     );
-      //   },
-      //   child: Icon(Icons.add),
-      //   backgroundColor: Colors.white,
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        },
+        child: Icon(Icons.home),
+        backgroundColor: Color.fromARGB(255, 5, 166, 50),
+      ),
       body: Padding(padding: const EdgeInsets.all(20.0), child: limitApps()),
     );
   }
