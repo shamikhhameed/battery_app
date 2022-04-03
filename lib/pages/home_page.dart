@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:battery_app/pages/charge_history.dart';
 import 'package:battery_app/pages/notification_setter.dart';
-import 'package:battery_app/pages/usage_last_charge.dart';
+import 'package:battery_app/pages/limit_apps.dart';
 import 'package:battery_app/pages/usage_last_week.dart';
 import 'package:battery_plus/battery_plus.dart' as Battery;
 import 'package:flutter/material.dart';

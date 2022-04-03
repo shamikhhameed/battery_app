@@ -1,9 +1,11 @@
 import 'package:battery_app/AllScreens/limit_update.dart';
+import 'package:battery_app/pages/home_page.dart';
+import 'package:battery_app/pages/limit_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:battery_app/AllScreens/limit.dart';
 import 'package:battery_app/utils/database_helper.dart';
 import 'package:battery_app/models/applications.dart';
-import 'package:animated_button/animated_button.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 class LimitList extends StatefulWidget {
   static const String idScreen = "LimitList";
@@ -16,11 +18,11 @@ class _LimitListState extends State<LimitList> {
   late DatabaseHelper helper;
   List list = [];
 
-  @override
+   @override
   void initState() {
     super.initState();
     helper = DatabaseHelper();
-    helper.initializeDB().whenComplete(() async {
+    helper.createDB().whenComplete(() async {
       this.getList().then((value) => {
             setState(() {
               list = value!;
@@ -30,6 +32,7 @@ class _LimitListState extends State<LimitList> {
     });
   }
 
+  // load the list using db
   Future<List?> getList() async {
     List<Applications> limitList = await helper.applicationsList();
     for (var app in limitList) {
@@ -44,12 +47,40 @@ class _LimitListState extends State<LimitList> {
     return list;
   }
 
+  // refreshing the list
   Future<void> _onRefresh() async {
-    this.getList().then((value) => {
+    list = [];
+    await this.getList().then((value) => {
           setState(() {
             list = value!;
           })
         });
+  }
+
+ // delete function
+  void delete(int id, [list]) async{
+    // confirmation alert
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.confirm,
+      text: 'Do you want to Delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Colors.green,
+      onConfirmBtnTap: () async {
+        await Future.delayed(Duration(milliseconds: 1000));
+        await helper.deleteApplications(id);
+        Navigator.pop(context);
+        await CoolAlert.show(
+          context: context,
+          type: CoolAlertType.success,
+          title: 'Successful',
+          text: 'Delete Successful!',
+          loopAnimation: false,
+        );
+        _onRefresh();
+      },
+    );
   }
 
   @override
@@ -59,20 +90,21 @@ class _LimitListState extends State<LimitList> {
         title: Text('Limit Apps List'),
         centerTitle: true,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => Limit()),
-      //     );
-      //   },
-      //   child: Icon(Icons.add),
-      //   backgroundColor: Colors.white,
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        },
+        child: Icon(Icons.home),
+        backgroundColor: Color.fromARGB(255, 5, 166, 50),
+      ),
       body: Padding(padding: const EdgeInsets.all(20.0), child: limitApps()),
     );
   }
 
+  // build apps list using db
   Widget limitApps() {
     return RefreshIndicator(
         onRefresh: _onRefresh,
@@ -121,10 +153,7 @@ class _LimitListState extends State<LimitList> {
                         color: Colors.white,
                       ),
                       onPressed: () async {
-                        await helper.deleteApplications(list[index]['id']);
-                        setState(() {
-                          list.remove(list[index]);
-                        });
+                        delete(list[index]['id'],list[index]);
                       },
                     ),
                   ],
