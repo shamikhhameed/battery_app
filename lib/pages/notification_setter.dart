@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:battery_app/sql_helper.dart';
-import 'package:battery_app/widgets/notification.dart';
+import 'package:battery_app/widgets.dart/notification.dart';
 import 'package:battery_info/battery_info_plugin.dart';
 import 'package:flutter/material.dart';
 
@@ -13,16 +13,15 @@ class NotificationSetter extends StatefulWidget {
 }
 
 class _NotificationSetterState extends State<NotificationSetter> {
-  // late final BatteryDB _crudStorage;
   late final SQLHelper _crudStorage;
 
-  Timer? timer;
-  int _batteryLevel = 0;
-  List<Battery> _batteryList = [];
+  Timer? timer; //timer used
+  int _batteryLevel = 0; //variable to save the battery level
+  List<Battery> _batteryList = []; //battery list
 
   @override
   void initState() {
-    // _crudStorage = BatteryDB(dbName: 'db.sqlite');
+    //DB is called
     _crudStorage = SQLHelper(dbName: 'batteryapp2.db');
     _crudStorage.open();
     startTimer();
@@ -36,13 +35,15 @@ class _NotificationSetterState extends State<NotificationSetter> {
     super.dispose();
   }
 
-  // Start Timer
+  //startTimer() - at each second, the real-time battery level is checked from the phone
   startTimer() {
     timer = Timer.periodic(
         const Duration(seconds: 1), (Timer t) => checkBatteryLevel());
   }
 
-  // Get battery level as a int value
+  //Get the battery level as an int value
+  //It calls the checkAlert function to check whether it has already sent an alert to the specific time
+  //The battery level at the moment is saved to _batteryLevel variable
   checkBatteryLevel() {
     checkAlerts();
     BatteryInfoPlugin().androidBatteryInfoStream.listen((data) {
@@ -50,25 +51,29 @@ class _NotificationSetterState extends State<NotificationSetter> {
     });
   }
 
-  // Check that alert available to display
+  //Check whether the alert is available to display
+  //If the battery level of the DB is equal to the level at the moment and if an alert has not been sent to that level, timer is stopped
   checkAlerts() {
     if (_batteryList
         .any((p) => (p.batteryLevel == _batteryLevel && p.isTriggered == 0))) {
       timer?.cancel();
+
+      //battery level saved in DB = battery level from the phone
       Battery t =
           _batteryList.firstWhere((el) => el.batteryLevel == _batteryLevel);
 
-      return sendNotification(
-          title: "Battery Alert", body: " Battery level ${t.batteryLevel} %");
+      //sends the notifcation
+      sendNotification(
+          title: "Battery Alert!", body: " Your Battery level is at ${t.batteryLevel} %");
+
+          //restart the time after notification is been sent (update the DB)
+          _crudStorage.update(Battery(id: t.id, batteryLevel: t.batteryLevel, isTriggered: 1)).then((value) => startTimer());
     }
   }
 
-//   void test()  async{
   @override
   Widget build(BuildContext context) {
-    // test();
     return Scaffold(
-      // backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: const Text("Battery Alert"),
         centerTitle: true,
@@ -84,6 +89,8 @@ class _NotificationSetterState extends State<NotificationSetter> {
                     child: CircularProgressIndicator(),
                   );
                 }
+
+                //Data in batteryinfo is taken to batteryList - to access the data in the DB
                 final batteryinfo = snapshot.data as List<Battery>;
                 _batteryList = batteryinfo;
 
@@ -94,6 +101,8 @@ class _NotificationSetterState extends State<NotificationSetter> {
                         await _crudStorage.create(batteryLevel, 0);
                       },
                     ),
+                    
+                    //ListView build
                     Expanded(
                       child: ListView.builder(
                           padding: const EdgeInsets.only(
@@ -105,6 +114,7 @@ class _NotificationSetterState extends State<NotificationSetter> {
                               elevation: 5,
                               child: Column(
                                 children: <Widget>[
+                                  //when List tile is tapped, update function acts
                                   ListTile(
                                     onTap: () async {
                                       final editedBattery =
@@ -134,8 +144,6 @@ class _NotificationSetterState extends State<NotificationSetter> {
                                         color: Colors.red,
                                       ),
                                     ),
-
-                                    //
                                   ),
                                   const Divider(),
                                 ],
@@ -156,6 +164,7 @@ class _NotificationSetterState extends State<NotificationSetter> {
   }
 }
 
+//Delete dialog box
 Future<bool> showDeleteDialog(BuildContext context) {
   return showDialog(
     context: context,
@@ -165,6 +174,7 @@ Future<bool> showDeleteDialog(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () {
+              //Navigate to the page
               Navigator.of(context).pop(false);
             },
             child: const Text('No'),
@@ -189,6 +199,7 @@ Future<bool> showDeleteDialog(BuildContext context) {
 
 final _batteryLevelController = TextEditingController();
 
+//Update Dialog Box
 Future<Battery?> showUpdateDialog(BuildContext context, Battery battery) {
   _batteryLevelController.text = battery.batteryLevel.toString();
 
@@ -234,7 +245,8 @@ Future<Battery?> showUpdateDialog(BuildContext context, Battery battery) {
   });
 }
 
-typedef OnCompose = void Function(int batteryLevel); //callback definition
+//callback definition
+typedef OnCompose = void Function(int batteryLevel); 
 
 class ComposeWidget extends StatefulWidget {
   final OnCompose onCompose;
@@ -253,12 +265,14 @@ class _ComposeWidgetState extends State<ComposeWidget> {
     super.initState();
   }
 
+  //Dispose the controllers
   @override
   void dispose() {
     _batteryLevelContraller.dispose();
     super.dispose();
   }
 
+  //Widget to enter the Battery level
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -319,16 +333,21 @@ class Battery implements Comparable {
         isTriggered =
             row['IS_TRIGGERED'] == null ? 0 : row['IS_TRIGGERED'] as int;
 
+  //Compares
   @override
   int compareTo(covariant Battery other) => other.id.compareTo(id);
 
+  //Bool operator
   @override
-  bool operator ==(covariant Battery other) => id == other.id;
+  bool operator == (covariant Battery other) => id == other.id;
 
+  //hashCode
   @override
   int get hashCode => id.hashCode;
 
+  //Print the Battery instances
   @override
   String toString() =>
       'Battery,id = $id, batteryLevel: $batteryLevel, isTriggered: $isTriggered';
 }
+   

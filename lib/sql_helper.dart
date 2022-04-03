@@ -18,7 +18,7 @@ class SQLHelper {
 
   SQLHelper({required this.dbName});
 
-  //shamikh's part starts
+  //Shamikh's part starts
   static Future<void> createTables(sql.Database database) async {
     await database.execute("""CREATE TABLE items(
         id String PRIMARY KEY NOT NULL,
@@ -121,9 +121,10 @@ class SQLHelper {
       debugPrint("Something went wrong when deleting an item: $err");
     }
   }
-  //shamikh's part ends
+  //Shamikh's part ends
 
-  //shehani's part starts
+  //Shehani's part starts
+  //CREATE THE BATTERY ALERT (CRUD)
   Future create(int batteryLevel, int isTriggered) async {
     final db = _db;
     if (db == null) {
@@ -133,6 +134,8 @@ class SQLHelper {
       final id = await db.insert('BATTERYINFO',
           {'BATTERY_LEVEL': batteryLevel, 'IS_TRIGGERED': isTriggered});
 
+      //read all the existing Battery objects from the DB
+      //_streamController - the gateway which contains a stream allowing not only to read the data, but also to write the data
       final battery =
           Battery(id: id, batteryLevel: batteryLevel, isTriggered: isTriggered);
       _batterys.add(battery);
@@ -144,7 +147,7 @@ class SQLHelper {
     }
   }
 
-// R in CRUD
+  //READ THE BATTERY ALERT (CRUD)
   Future<List<Battery>> _fetchbatteryinfo() async {
     final db = _db;
     if (db == null) {
@@ -154,6 +157,7 @@ class SQLHelper {
       final read = await db.query('BATTERYINFO',
           distinct: true, columns: ['ID', 'BATTERY_LEVEL'], orderBy: 'ID');
 
+      //DB data is read and it is saved to batteryinfo variable as a map function
       final batteryinfo = read.map((row) => Battery.fromRow(row)).toList();
       return batteryinfo;
     } catch (e) {
@@ -162,7 +166,7 @@ class SQLHelper {
     }
   }
 
-// U in CRUD
+  //UPDATE THE BATTERY ALERT (CRUD)
   Future<bool> update(Battery battery) async {
     final db = _db;
     if (db == null) {
@@ -190,7 +194,7 @@ class SQLHelper {
     }
   }
 
-// D in CRUD
+  //DELETE THE BATTERY ALERT (CRUD)
   Future<bool> delete(Battery battery) async {
     final db = _db;
     if (db == null) {
@@ -216,6 +220,7 @@ class SQLHelper {
     }
   }
 
+  //Close the DB
   Future<bool> close() async {
     final db = _db;
     if (db == null) {
@@ -226,6 +231,7 @@ class SQLHelper {
     return true;
   }
 
+  //Open and read the DB
   Future<bool> open() async {
     if (_db != null) {
       return true;
@@ -238,17 +244,16 @@ class SQLHelper {
       final db = await openDatabase(path);
       _db = db;
 
-// create table
-
+      //CREATE THE DB TABLE
       const create = '''CREATE TABLE IF NOT EXISTS BATTERYINFO (
-  ID INTEGER PRIMARY KEY AUTOINCREMENT,
-  BATTERY_LEVEL INT NOT NULL,
-  IS_TRIGGERED INT NOT NULL
-)''';
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        BATTERY_LEVEL INT NOT NULL,
+        IS_TRIGGERED INT NOT NULL
+      )''';
 
       await db.execute(create);
-//read all existing Battery objects from the db
 
+      //READ ALL THE EXISTING BATTERY OBJECTS FROM THE DB
       _batterys = await _fetchbatteryinfo();
       _streamController.add(_batterys);
 
@@ -261,5 +266,5 @@ class SQLHelper {
 
   Stream<List<Battery>> all() =>
       _streamController.stream.map((Batterys) => Batterys..sort());
-  //shehani's part ends
+  //Shehani's part ends
 }
