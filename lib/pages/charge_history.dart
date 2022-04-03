@@ -30,6 +30,7 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     });
     }
   }
+  }
 
   Color COLOR_RED = Colors.red;
   Color COLOR_GREEN = Colors.green;
@@ -42,20 +43,16 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     _refreshChargeHistory();
     _broadcastBatteryLevels();
     battery.onBatteryStateChanged.listen((event) {
-      if(mounted) {
+      if (mounted) {
         setState(() {
-        batteryState = event;
+          batteryState = event;
       });
-      }
-      print('Battery state change detected');
-      // () async {
+    }
       if (batteryState == BatteryState.charging) {
         // _addItem();
         _addOrUpdateItem();
         _deleteItem();
-        print('DB Updated - charger connected');
       }
-      // };
     });
   }
 
@@ -64,21 +61,13 @@ class _ChargeHistoryState extends State<ChargeHistory> {
     while (broadcastBattery!) {
       var batteryLvls = await battery.batteryLevel;
       if (mounted) {
-        setState(() {
-          showBatteryLevels = batteryLvls;
-        });
-      }
-      await Future.delayed(const Duration(seconds: 5));
+      setState(() {
+        showBatteryLevels = batteryLvls;
+      });
+    }
+      await Future.delayed(Duration(seconds: 5));
     }
   }
-
-  // @override
-  // void dispose() {
-  //   setState(() {
-  //     broadcastBattery = false;
-  //   });
-  //   super.dispose();
-  // }
 
   // Insert a new charge data to the database
   Future<void> _addItem() async {
