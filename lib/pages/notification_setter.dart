@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:battery_app/sql_helper.dart';
-import 'package:battery_app/widgets.dart/notification.dart';
+import 'package:battery_app/widgets/notification.dart';
 import 'package:battery_info/battery_info_plugin.dart';
 import 'package:flutter/material.dart';
 

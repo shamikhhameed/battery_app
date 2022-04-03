@@ -18,12 +18,15 @@ class MyDatabase extends _$MyDatabase {
   @override
   int get schemaVersion => 1;
 
+  // get all as a stream
   Stream<List<AppDetail>> get getAllApps => select(appDetails).watch();
 
+  //insert or update
   Future<int?> createOrUpdateAppDetail(AppDetailsCompanion appDetail) {
     return into(appDetails).insertOnConflictUpdate(appDetail);
   }
 
+  //Delete by id
   Future deleteAppDetail(int appid) {
     return (delete(appDetails)..where((t) => t.id.isIn([appid]))).go();
   }

@@ -2,12 +2,11 @@ import 'package:app_usage/app_usage.dart';
 import 'package:battery_app/models/app_usage_data.dart';
 import 'package:battery_app/pages/installed_apps.dart';
 import 'package:battery_app/presistance/app_details.dart';
-import 'package:battery_app/widgets.dart/app_usage_card.dart';
+import 'package:battery_app/widgets/app_usage_card.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
@@ -50,11 +49,11 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
     var db = Provider.of<MyDatabase>(context);
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Last 7 Days"),
+          title: const Text("Last 7 Days Usage"),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
+            backgroundColor: Colors.white,
             onPressed: () async {
               var result = await showModalBottomSheet(
                 context: context,
@@ -82,30 +81,34 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
                     var data = snapshot.data;
                     if (data == null || data.isEmpty) {
                       return Center(
-                          child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: ListTile(
-                          leading: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.add),
-                            ],
+                          child: Container(
+                        //decoration: BoxDecoration(color: Colors.amber),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: ListTile(
+                            tileColor: Colors.red,
+                            leading: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.add),
+                              ],
+                            ),
+                            title: const Text('No apps added'),
+                            onTap: () async {
+                              var result = await showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return const AddEditApp();
+                                },
+                              );
+                              if (result is AppDetailsCompanion) {
+                                await db.createOrUpdateAppDetail(result);
+                              }
+                            },
+                            subtitle: const Text(
+                                'Please click + button or click this card to add apps'),
                           ),
-                          title: const Text('No apps added'),
-                          onTap: () async {
-                            var result = await showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) {
-                                return const AddEditApp();
-                              },
-                            );
-                            if (result is AppDetailsCompanion) {
-                              await db.createOrUpdateAppDetail(result);
-                            }
-                          },
-                          subtitle: const Text(
-                              'Please click + button or click this card to add apps'),
                         ),
                       ));
                     }
@@ -214,30 +217,6 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
   }
 }
 
-class AppUsageChart extends StatelessWidget {
-  const AppUsageChart(this.data, {Key? key}) : super(key: key);
-  final List<AppUsageInfo> data;
-
-  @override
-  Widget build(BuildContext context) {
-    List<charts.Series<AppUsageInfo, String>> series = [
-      charts.Series(
-        id: "App Usage",
-        data: data,
-        domainFn: (AppUsageInfo series, _) => series.appName,
-        measureFn: (AppUsageInfo series, _) => series.usage.inMinutes,
-      )
-    ];
-
-    return SizedBox(
-        height: 200,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: charts.BarChart(series, animate: true),
-        ));
-  }
-}
-
 class AddEditApp extends StatefulWidget {
   const AddEditApp({
     this.appData,
@@ -314,21 +293,24 @@ class _AddEditAppState extends State<AddEditApp> {
               height: 40,
             ),
             ElevatedButton(
-              child: const Text('Add Application'),
-              onPressed: () async {
-                var data = AppDetailsCompanion(
-                    id: appId != null
-                        ? drift.Value(appId!)
-                        : const drift.Value.absent(),
-                    appName: drift.Value(_appName.text),
-                    appPackageName: drift.Value(_appPacakgeName.text));
-                Navigator.pop(context, data);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                onPrimary: Colors.black
-              )
-            )
+                child:
+                    Text(widget.appData == null ? 'Add Application' : 'Update'),
+                onPressed: () async {
+                  if (_appName.text.isNotEmpty &&
+                      _appPacakgeName.text.isNotEmpty) {
+                    var data = AppDetailsCompanion(
+                        id: appId != null
+                            ? drift.Value(appId!)
+                            : const drift.Value.absent(),
+                        appName: drift.Value(_appName.text),
+                        appPackageName: drift.Value(_appPacakgeName.text));
+                    Navigator.pop(context, data);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.white, onPrimary: Colors.black))
           ],
         ),
       ),
