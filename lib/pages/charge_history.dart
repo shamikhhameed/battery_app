@@ -17,19 +17,7 @@ class _ChargeHistoryState extends State<ChargeHistory> {
   int showBatteryLevels = 0;
   BatteryState? batteryState;
   bool? broadcastBattery;
-
   bool _isLoading = true;
-  // This function is used to fetch all data from the database
-  void _refreshChargeHistory() async {
-    final data = await SQLHelper.getItems();
-    if (mounted) {
-      setState(() {
-      _chargeHistory = data;
-      _isLoading = false;
-    });
-    }
-  }
-  }
 
   Color COLOR_RED = Colors.red;
   Color COLOR_GREEN = Colors.green;
@@ -96,6 +84,17 @@ class _ChargeHistoryState extends State<ChargeHistory> {
       await _addItem();
     } else {
       await _updateItem();
+    }
+  }
+
+  // This function is used to fetch all data from the database
+  void _refreshChargeHistory() async {
+    final data = await SQLHelper.getItems();
+    if (mounted) {
+      setState(() {
+      _chargeHistory = data;
+      _isLoading = false;
+    });
     }
   }
 
