@@ -26,7 +26,6 @@ class LimitState extends State<Limit> {
   // List device apps
   Future<List?> getUsageStats() async {
     try {
-      double allTime = 0;
       DateTime endDate = new DateTime.now();
       DateTime startDate = endDate.subtract(Duration(hours: 24));
       List<AppUsageInfo> infoList =

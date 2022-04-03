@@ -30,7 +30,7 @@ class BatteryStates extends State<BatteryPage> {
   bool countDown = false;
 
   // List device apps
-  Future<List?> getUsageStats() async {
+  Future<List?> getAppUsage() async {
     try {
       double allTime = 0;
       DateTime endDate = new DateTime.now();
@@ -63,7 +63,7 @@ class BatteryStates extends State<BatteryPage> {
     super.initState();
     reset();
     batteryChange();
-    this.getUsageStats().then((value) => {
+    this.getAppUsage().then((value) => {
           setState(() {
             _infos = value!;
           }),
@@ -74,13 +74,15 @@ class BatteryStates extends State<BatteryPage> {
   // find device charging state
   void batteryChange() {
     battery.onBatteryStateChanged.listen((state) {
-      if (state == BatteryState.discharging) {
+      if (state == BatteryState.charging) {
         batteryCharging = true;
+        startTimer(); 
+      } else if(state == BatteryState.discharging){
+        batteryCharging = false;
         startTimer();
       } else {
         stopTimer();
         reset();
-        batteryCharging = false;
         if (state == BatteryState.full) {
           batteryFull = true;
         }
@@ -149,7 +151,7 @@ class BatteryStates extends State<BatteryPage> {
                   Text(
                     '${twoDigits(duration.inHours)}:${minutes}:${second}',
                     style: TextStyle(
-                      fontSize: 24.0, 
+                      fontSize: 24.0,
                       fontFamily: "Brand Bold",
                     ),
                     textAlign: TextAlign.center,

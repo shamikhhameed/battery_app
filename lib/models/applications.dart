@@ -42,7 +42,7 @@ class Applications {
   }
 
   // Extract a Note object from a Map object
-  Applications.fromMapObject(Map<String, dynamic> map) {
+  Applications.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.appName = map['appName'];
     this.hours = map['hours'];
