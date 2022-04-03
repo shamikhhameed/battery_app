@@ -34,7 +34,7 @@ class DatabaseHelper {
     final db = await createDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('applications');
-    return queryResult.map((e) => Applications.fromMapObject(e)).toList();
+     return queryResult.map((e) => Applications.fromMap(e)).toList();
   }
 
   //delete data

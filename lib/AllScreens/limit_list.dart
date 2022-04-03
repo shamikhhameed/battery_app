@@ -94,10 +94,10 @@ class _LimitListState extends State<LimitList> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => BatteryPage()),
           );
         },
-        child: Icon(Icons.home),
+        child: Icon(Icons.apps),
         backgroundColor: Color.fromARGB(255, 5, 166, 50),
       ),
       body: Padding(padding: const EdgeInsets.all(20.0), child: limitApps()),
