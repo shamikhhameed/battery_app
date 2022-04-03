@@ -38,7 +38,7 @@ class SQLHelper {
     );
   }
 
-  // Create new item (journal)
+  // Create a new record
   static Future<int> createItem(String percentage) async {
     final db = await SQLHelper.db();
 
@@ -47,6 +47,7 @@ class SQLHelper {
     String formattedDateWithTime =
         DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
 
+    // Formatted date is used as primary key so that only one record can exist for each day
     final data = {
       'id': formattedDate,
       'percentage': percentage,
@@ -57,36 +58,22 @@ class SQLHelper {
     return id;
   }
 
-  // Read all items (journals)
+  // Read all records
   static Future<List<Map<String, dynamic>>> getItems() async {
     final db = await SQLHelper.db();
-    // return db.query('items', orderBy: "id DESC");
-    // return db.query('items', orderBy: "convert(id,DATE,103) DESC");
     return db.rawQuery('SELECT * FROM items ORDER BY date(id) DESC');
   }
 
-  // Read a single item by id
-  // The app doesn't use this method but I put here in case you want to see it
-  // static Future<List<Map<String, dynamic>>> getItem(int id) async {
-  //   final db = await SQLHelper.db();
-  //   return db.query('items', where: "id = ?", whereArgs: [id], limit: 1);
-  // }
-
-  // Read a single item by date
+  // Read a single record by date
   static Future<List<Map<String, dynamic>>> getItem() async {
     final db = await SQLHelper.db();
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     return db.query('items',
         where: "id = ?", whereArgs: [formattedDate], limit: 1);
-    // return db.rawQuery(
-    //     "SELECT * FROM items WHERE createdAt >= ? AND createdAt <= ?", [
-    //   "${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} 00:00:00.000000",
-    //   "${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} 23:59:59.999999"
-    // ]);
   }
 
-  //Update an item by id
+  //Update a record by date
   static Future<int> updateItem(String percentage) async {
     final db = await SQLHelper.db();
 
@@ -99,22 +86,13 @@ class SQLHelper {
 
     final result = await db
         .update('items', data, where: "id = ?", whereArgs: [formattedDate]);
-    // await db.rawUpdate(
-    //     "UPDATE items SET percentage = ?, createdAt = ? WHERE createdAt >= ? AND createdAt <= ?",
-    //     [
-    //   percentage.toString(),
-    //   DateTime.now().toString(),
-    //   "${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} 00:00:00",
-    //   "${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} 23:59:59"
-    // ]);
     return result;
   }
 
-  // Delete
+  // Delete any record that is older than 10 days from the present date
   static Future<void> deleteItem() async {
     final db = await SQLHelper.db();
     try {
-      // await db.delete("items", where: "id = ?", whereArgs: [id]);
       await db.rawQuery(
           "DELETE FROM items WHERE createdAt <= datetime('now','-9 day')");
     } catch (err) {
