@@ -8,7 +8,7 @@ void sendNotification({String? title, String? body}) async {
       FlutterLocalNotificationsPlugin();
 
 //Set the settings for various platforms
-  //Initialise the plugin
+  // Initialise the plugin
   //For the Android Initialization
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
