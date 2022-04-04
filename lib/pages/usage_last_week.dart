@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 class UsageLastWeek extends StatefulWidget {
   static const String routeName = '/usageLastWeek';
@@ -82,7 +83,7 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
                     if (data == null || data.isEmpty) {
                       return Center(
                           child: Container(
-                        //decoration: BoxDecoration(color: Colors.amber),
+                        decoration: const BoxDecoration(color: Color.fromARGB(255, 12, 11, 10)),
                         child: Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: ListTile(
@@ -152,6 +153,13 @@ class _UsageLastWeekState extends State<UsageLastWeek> {
                                                 onPressed: (context) async {
                                                   await db
                                                       .deleteAppDetail(app.id);
+                                                  CoolAlert.show(
+                                                    context: context,
+                                                    type: CoolAlertType.success,
+                                                    title:
+                                                        'Successfully Deleted',
+                                                    loopAnimation: false,
+                                                  );
                                                 },
                                                 backgroundColor: CupertinoColors
                                                     .destructiveRed,
@@ -305,6 +313,13 @@ class _AddEditAppState extends State<AddEditApp> {
                         appName: drift.Value(_appName.text),
                         appPackageName: drift.Value(_appPacakgeName.text));
                     Navigator.pop(context, data);
+                    CoolAlert.show(
+                      context: context,
+                      type: CoolAlertType.success,
+                      title: 'Successful',
+                      text: 'Application added!',
+                      loopAnimation: false,
+                    );
                   } else {
                     Navigator.pop(context);
                   }
