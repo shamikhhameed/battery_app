@@ -182,28 +182,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              // Container(
-              //   padding: const EdgeInsets.only(top: 15),
-              //   width: MediaQuery.of(context).size.width * 0.85,
-              //   height: MediaQuery.of(context).size.width * 0.16,
-              //   color: Color.fromARGB(40, 0, 0, 0),
-              //   child: Align(
-              //     alignment: Alignment.topCenter,
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Text(
-              //           batteryState == BatteryState.charging
-              //               ? "Charging"
-              //               : batteryState == BatteryState.discharging
-              //                   ? "Discharging"
-              //                   : "Fully Charged",
-              //           style: Theme.of(context).textTheme.headline5,
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 10),
               InkWell(
                 onTap: () {
@@ -250,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Set Notification",
+                          "Battery Alert",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
@@ -277,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Last Charge Usage",
+                          "App Limiter",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
